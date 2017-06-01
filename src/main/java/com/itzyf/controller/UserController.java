@@ -12,10 +12,15 @@ import java.util.List;
  * @author 依风听雨
  * @version 创建时间：2017/6/1 11:31
  */
+@RequestMapping("/user")
 @RestController
 public class UserController {
+    private final UserService userService;
+
     @Autowired
-    private UserService userService;
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @RequestMapping(value = "/add", method = RequestMethod.PUT)
     public Result addUser(@RequestBody User user) {
@@ -24,14 +29,12 @@ public class UserController {
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     public Result<List<User>> getAll() {
-        Result<List<User>> result = new Result<>();
         return createResult(userService.getAll());
     }
 
-    @RequestMapping("/user/{id}")
+    @RequestMapping("/{id}")
     public Result<User> getUser(@PathVariable int id) {
-        User user = userService.getUser(id);
-        return createResult(user);
+        return createResult(userService.getUser(id));
     }
 
     @RequestMapping("/total")
