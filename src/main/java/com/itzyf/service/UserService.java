@@ -18,5 +18,5 @@ public interface UserService {
 
     List<User> find(Map<String, Object> map);
 
-    Long getTotal(Map<String, Object> map);
+    Long getTotal();
 }

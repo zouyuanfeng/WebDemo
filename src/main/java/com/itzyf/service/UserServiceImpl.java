@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Long getTotal(Map<String, Object> map) {
-        return userDao.getTotal(map);
+    public Long getTotal() {
+        return userDao.getTotal();
     }
 }

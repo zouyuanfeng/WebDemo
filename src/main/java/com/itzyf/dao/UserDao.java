@@ -1,6 +1,7 @@
 package com.itzyf.dao;
 
 import com.itzyf.bean.User;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,11 +19,13 @@ public interface UserDao {
 
     User getUser(int id);
 
+
     int delete(User user);
 
     int update(User user);
 
     List<User> find(Map<String, Object> map);
 
-    Long getTotal(Map<String, Object> map);
+    @Select("SELECT COUNT(id) from user")
+    Long getTotal();
 }

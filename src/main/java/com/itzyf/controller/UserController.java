@@ -34,6 +34,11 @@ public class UserController {
         return createResult(user);
     }
 
+    @RequestMapping("/total")
+    public Result<Long> getTotal() {
+        return createResult(userService.getTotal());
+    }
+
     private <T> Result<T> createResult(T t) {
         Result<T> result = new Result<>();
         result.setMsg("成功");
