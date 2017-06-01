@@ -7,12 +7,30 @@
         <result column="age" property="age" jdbcType="INTEGER"/>
     </resultMap>
 
+
     <!--<select id="selectByCountryQueryModel" resultMap="user">-->
 
     <!--</select>-->
-    <!--<typeAlias type="com.someapp.model.User" alias="User"/>-->
+    <!--<typeAlias type="com.itzyf.bean.User" alias="User"/>-->
 
     <insert id="add" parameterType="com.itzyf.bean.User">
-        insert into user (u_name,age) values(#{name},#{age})
+        INSERT INTO user (u_name, age) VALUES (#{name}, #{age})
     </insert>
+
+    <sql id="selectUser">
+        SELECT
+            id,
+            u_name AS "name",
+            age
+        FROM user</sql>
+    <select id="getAll" resultType="com.itzyf.bean.User">
+        <include refid="selectUser"/>
+    </select>
+
+    <select id="getUser" parameterType="int" resultType="com.itzyf.bean.User">
+        <include refid="selectUser"/>
+        WHERE id = #{id}
+    </select>
+
+
 </mapper>

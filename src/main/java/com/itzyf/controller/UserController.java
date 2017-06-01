@@ -4,10 +4,9 @@ import com.itzyf.bean.Result;
 import com.itzyf.bean.User;
 import com.itzyf.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author 依风听雨
@@ -20,10 +19,27 @@ public class UserController {
 
     @RequestMapping(value = "/add", method = RequestMethod.PUT)
     public Result addUser(@RequestBody User user) {
-        Result result = new Result();
+        return createResult(userService.add(user));
+    }
+
+    @RequestMapping(value = "/all", method = RequestMethod.GET)
+    public Result<List<User>> getAll() {
+        Result<List<User>> result = new Result<>();
+        return createResult(userService.getAll());
+    }
+
+    @RequestMapping("/user/{id}")
+    public Result<User> getUser(@PathVariable int id) {
+        User user = userService.getUser(id);
+        return createResult(user);
+    }
+
+    private <T> Result<T> createResult(T t) {
+        Result<T> result = new Result<>();
         result.setMsg("成功");
         result.setCode(0);
-        userService.add(user);
+        if (t != null)
+            result.setResult(t);
         return result;
     }
 }
