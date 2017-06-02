@@ -1,6 +1,7 @@
 package com.itzyf.controller;
 
 import com.itzyf.bean.Course;
+import com.itzyf.bean.PageResult;
 import com.itzyf.bean.Result;
 import com.itzyf.bean.Teacher;
 import com.itzyf.service.CourseService;
@@ -8,6 +9,7 @@ import com.itzyf.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -35,12 +37,14 @@ public class ScoreController extends BaseController {
     }
 
     @RequestMapping("/allCourse")
-    public Result<List<Course>> getAllCourse() {
-        return createResult(courseService.getAllCourse());
+    public Result<PageResult<List<Course>>> getAllCourse(@RequestParam(defaultValue = "0") int pageNum, @RequestParam(defaultValue = "10") int pageSize) {
+        return createResult(courseService.getAllCourse(pageNum,pageSize));
     }
 
     @RequestMapping("/{cno}")
     public Result<Course> findCourseById(@PathVariable String cno) {
         return createResult(courseService.findCourseById(cno));
     }
+
+
 }

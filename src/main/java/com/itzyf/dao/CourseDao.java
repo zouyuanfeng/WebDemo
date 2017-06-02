@@ -15,5 +15,6 @@ public interface CourseDao {
     List<Course> findAll();
 
     //3-105
+//    @Select("SELECT * FROM course WHERE Cno= #{cno}")
     Course findCourseById(String cno);
 }

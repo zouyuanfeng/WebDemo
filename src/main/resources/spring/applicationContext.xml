@@ -50,16 +50,16 @@
                 <value>classpath:mapper/*.xml</value>
             </array>
         </property>
-        <property name="typeAliasesPackage" value="com.tydic.wx.model"/>
+        <property name="typeAliasesPackage" value="com.itzyf.bean"/>
         <property name="plugins">
             <array>
-                <bean class="com.github.pagehelper.PageHelper">
+                <bean class="com.github.pagehelper.PageInterceptor">
                     <property name="properties">
                         <value>
                             offsetAsPageNum=true
                             rowBoundsWithCount=true
                             pageSizeZero=true
-                            reasonable=true
+                            <!--reasonable=true-->
                         </value>
                     </property>
                 </bean>
