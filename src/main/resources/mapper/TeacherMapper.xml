@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.itzyf.dao.TeacherDao">
+    <!--auto generated Code-->
+    <!--<resultMap id="AllColumnMap" type="com.itzyf.bean.Teacher">-->
+    <!--<result column="tno" property="Tno"/>-->
+    <!--<result column="tname" property="Tname"/>-->
+    <!--<result column="tsex" property="Tsex"/>-->
+    <!--<result column="tbirthday" property="Tbirthday"/>-->
+    <!--<result column="prof" property="Prof"/>-->
+    <!--<result column="depart" property="Depart"/>-->
+    <!--</resultMap>-->
+
+    <!--&lt;!&ndash;auto generated Code&ndash;&gt;-->
+    <!--<sql id="all_column">-->
+    <!--`Tno`,-->
+    <!--`tname`,-->
+    <!--`tsex`,-->
+    <!--`tbirthday`,-->
+    <!--`prof`,-->
+    <!--`depart`-->
+    <!--</sql>-->
+
+    <!--&lt;!&ndash;auto generated Code&ndash;&gt;-->
+    <!--<insert id="insert" useGeneratedKeys="true" keyProperty="pojo.Tno">-->
+    <!--INSERT INTO teacher (-->
+    <!--`tno`,-->
+    <!--`tname`,-->
+    <!--`tsex`,-->
+    <!--`tbirthday`,-->
+    <!--`prof`,-->
+    <!--`depart`-->
+    <!--) VALUES (-->
+    <!--#{pojo.Tno},-->
+    <!--#{pojo.Tname},-->
+    <!--#{pojo.Tsex},-->
+    <!--#{pojo.Tbirthday},-->
+    <!--#{pojo.Prof},-->
+    <!--#{pojo.Depart}-->
+    <!--)-->
+    <!--</insert>-->
+
+    <!--&lt;!&ndash;auto generated Code&ndash;&gt;-->
+    <!--<insert id="insertSelective" useGeneratedKeys="true" keyProperty="pojo.Tno">-->
+    <!--INSERT INTO teacher-->
+    <!--<trim prefix="(" suffix=")" suffixOverrides=",">-->
+    <!--<if test="pojo.Tno!=null">`tno`,</if>-->
+    <!--<if test="pojo.Tname!=null">`tname`,</if>-->
+    <!--<if test="pojo.Tsex!=null">`tsex`,</if>-->
+    <!--<if test="pojo.Tbirthday!=null">`tbirthday`,</if>-->
+    <!--<if test="pojo.Prof!=null">`prof`,</if>-->
+    <!--<if test="pojo.Depart!=null">`depart`,</if>-->
+    <!--</trim>-->
+    <!--VALUES-->
+    <!--<trim prefix="(" suffix=")" suffixOverrides=",">-->
+    <!--<if test="pojo.Tno!=null">#{pojo.Tno},</if>-->
+    <!--<if test="pojo.Tname!=null">#{pojo.Tname},</if>-->
+    <!--<if test="pojo.Tsex!=null">#{pojo.Tsex},</if>-->
+    <!--<if test="pojo.Tbirthday!=null">#{pojo.Tbirthday},</if>-->
+    <!--<if test="pojo.Prof!=null">#{pojo.Prof},</if>-->
+    <!--<if test="pojo.Depart!=null">#{pojo.Depart},</if>-->
+    <!--</trim>-->
+    <!--</insert>-->
+
+    <!--&lt;!&ndash;auto generated Code&ndash;&gt;-->
+    <!--<insert id="insertList">-->
+    <!--INSERT INTO teacher (-->
+    <!--<include refid="all_column"/>-->
+    <!--)VALUES-->
+    <!--<foreach collection="pojos" item="pojo" index="index" separator=",">-->
+    <!--(-->
+    <!--#{pojo.Tno},-->
+    <!--#{pojo.Tname},-->
+    <!--#{pojo.Tsex},-->
+    <!--#{pojo.Tbirthday},-->
+    <!--#{pojo.Prof},-->
+    <!--#{pojo.Depart}-->
+    <!--)-->
+    <!--</foreach>-->
+    <!--</insert>-->
+
+    <!--&lt;!&ndash;auto generated Code&ndash;&gt;-->
+    <!--<update id="update">-->
+    <!--UPDATE teacher-->
+    <!--<set>-->
+    <!--<if test="pojo.Tno != null">`tno` = #{pojo.Tno},</if>-->
+    <!--<if test="pojo.Tname != null">`tname` = #{pojo.Tname},</if>-->
+    <!--<if test="pojo.Tsex != null">`tsex` = #{pojo.Tsex},</if>-->
+    <!--<if test="pojo.Tbirthday != null">`tbirthday` = #{pojo.Tbirthday},</if>-->
+    <!--<if test="pojo.Prof != null">`prof` = #{pojo.Prof},</if>-->
+    <!--<if test="pojo.Depart != null">`depart` = #{pojo.Depart}</if>-->
+    <!--</set>-->
+    <!--WHERE tno = #{pojo.Tno}-->
+    <!--</update>-->
+
+    <select id="findAll" resultType="com.itzyf.bean.Teacher">
+        SELECT
+            Tno,
+            Tname,
+            Tsex,
+            Tbirthday,
+            Prof,
+            Depart
+        FROM teacher
+    </select>
+</mapper>
+

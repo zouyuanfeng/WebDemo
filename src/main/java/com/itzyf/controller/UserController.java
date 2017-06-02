@@ -14,7 +14,7 @@ import java.util.List;
  */
 @RequestMapping("/user")
 @RestController
-public class UserController {
+public class UserController extends BaseController {
     private final UserService userService;
 
     @Autowired
@@ -42,12 +42,4 @@ public class UserController {
         return createResult(userService.getTotal());
     }
 
-    private <T> Result<T> createResult(T t) {
-        Result<T> result = new Result<>();
-        result.setMsg("成功");
-        result.setCode(0);
-        if (t != null)
-            result.setResult(t);
-        return result;
-    }
 }

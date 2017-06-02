@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.itzyf.dao.CourseDao">
+    <resultMap id="courseResult" type="com.itzyf.bean.Course">
+        <association property="teacher" column="Tno" select="selectTeacher"/>
+
+    </resultMap>
+
+    <select id="findAll" resultType="com.itzyf.bean.Course">
+        SELECT
+            c.Cno,
+            c.Cname,
+            c.Tno,
+            t.Tno,
+            t.Depart,
+            t.Prof,
+            t.Tbirthday,
+            t.Tname,
+            t.Tsex
+        FROM course c LEFT OUTER JOIN teacher t ON c.Tno = t.Tno
+    </select>
+
+
+    <select id="selectTeacher" resultType="com.itzyf.bean.Teacher">
+        SELECT *
+        FROM teacher
+        WHERE Tno = #{Tno}
+    </select>
+
+    <select id="findCourseById" resultMap="courseResult">
+        SELECT
+            Cno,
+            Cname,
+            Tno
+        FROM course
+        WHERE Cno = #{cno}
+    </select>
+</mapper>
