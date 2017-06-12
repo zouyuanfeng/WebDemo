@@ -10,6 +10,7 @@ INSERT INTO Course VALUES ('3-105', '计算机导论', '825');
 INSERT INTO Course VALUES ('3-245', '操作系统', '804');
 INSERT INTO Course VALUES ('6-166', '数字电路', '856');
 INSERT INTO Course VALUES ('9-888', '高等数学', '831');
+INSERT INTO Course VALUES ('3-106', '数据结构', '825');
 
 SELECT *
 FROM Course;

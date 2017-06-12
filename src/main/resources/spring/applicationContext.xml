@@ -28,7 +28,7 @@
 
     <!-- 读取配置文件 -->
     <context:property-placeholder ignore-unresolvable="true"
-                                  location="classpath*:jdbc.properties"/>
+                                  location="classpath*:jdbc.properties,classpath*:global-config.properties"/>
 
 
     <!-- 配置 Annotation 驱动，扫描@Transactional注解的类定义事务
@@ -114,31 +114,25 @@
     <!--</tx:attributes>-->
     <!--</tx:advice>-->
 
-    <!--<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">-->
-    <!--<property name="maxTotal" value="50" />-->
-    <!--<property name="maxIdle" value="10" />-->
-    <!--<property name="maxWaitMillis" value="1000" />-->
-    <!--<property name="testOnBorrow" value="true" />-->
+    <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <property name="maxTotal" value="50"/>
+        <property name="maxIdle" value="10"/>
+        <property name="maxWaitMillis" value="1000"/>
+        <property name="testOnBorrow" value="true"/>
 
-    <!--</bean>-->
+    </bean>
 
-    <!--&lt;!&ndash;<bean id="jedisPool" class="redis.clients.jedis.JedisPool">&ndash;&gt;-->
-    <!--&lt;!&ndash;<constructor-arg index="0" ref="jedisPoolConfig" />&ndash;&gt;-->
-    <!--&lt;!&ndash;<constructor-arg index="1" type="java.lang.String" value="192.168.161.158" />&ndash;&gt;-->
-    <!--&lt;!&ndash;<constructor-arg index="2" value="6379" />&ndash;&gt;-->
-    <!--&lt;!&ndash;</bean>&ndash;&gt;-->
+    <bean id="jedis.shardInfo" class="redis.clients.jedis.JedisShardInfo">
+        <constructor-arg index="0" value="${redis.host}"/>
+        <constructor-arg index="1" type="int" value="${redis.port}"/>
+    </bean>
 
-    <!--<bean id="jedis.shardInfo" class="redis.clients.jedis.JedisShardInfo">-->
-    <!--<constructor-arg index="0" value="${redis.host}" />-->
-    <!--<constructor-arg index="1" type="int" value="${redis.port}" />-->
-    <!--</bean>-->
-
-    <!--<bean id="shardedJedisPool" class="redis.clients.jedis.ShardedJedisPool">-->
-    <!--<constructor-arg index="0" ref="jedisPoolConfig" />-->
-    <!--<constructor-arg index="1">-->
-    <!--<list>-->
-    <!--<ref bean="jedis.shardInfo" />-->
-    <!--</list>-->
-    <!--</constructor-arg>-->
-    <!--</bean>-->
+    <bean id="shardedJedisPool" class="redis.clients.jedis.ShardedJedisPool">
+        <constructor-arg index="0" ref="jedisPoolConfig"/>
+        <constructor-arg index="1">
+            <list>
+                <ref bean="jedis.shardInfo"/>
+            </list>
+        </constructor-arg>
+    </bean>
 </beans>

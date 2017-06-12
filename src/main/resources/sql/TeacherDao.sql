@@ -11,7 +11,7 @@ INSERT INTO Teacher VALUES (804, '李诚', '男', '1958-12-02', '副教授', '�
 INSERT INTO Teacher VALUES (856, '张旭', '男', '1969-03-12', '讲师', '电子工程系');
 INSERT INTO Teacher VALUES (825, '王萍', '女', '1972-05-05', '助教', '计算机系');
 INSERT INTO Teacher VALUES (831, '刘冰', '女', '1977-08-14', '助教', '电子工程系');
-
+INSERT INTO Teacher VALUES (833, '人造人', '男', '1901-05-18', '实习', '电子工程系');
 
 SELECT *
 FROM Teacher;

@@ -1,10 +1,13 @@
 package com.itzyf.controller;
 
+import com.itzyf.bean.ResultTest;
+import com.itzyf.bean.Version;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -82,7 +85,28 @@ public class IndexController {
         FileOutputStream fileOutStream = new FileOutputStream(imageFile);
         //写入数据
         fileOutStream.write(data);
-
         return name + suffix;
     }
+
+    @ResponseBody
+    @RequestMapping("/version")
+    public Version getVersion() {
+        Version version = new Version();
+        version.setDesc("这是新版本");
+        version.setVersion("1.0.0");
+        version.setUrl("http://61.144.207.154:8081/131d1464-4bf7-46d8-8237-2e7fa8440a24/2005/f3/26/f3263c4a-f8b4-4e01-b17b-c989309e7872/kfid/7613760/A481F57EC636781A2FDC0F68B19E22AB.apk?fsname=com.snda.wifilocating_4.2.01_3120.apk&csr=1bbd");
+        return version;
+    }
+
+    @ResponseBody
+    @RequestMapping("/login")
+    public ResultTest onLogin() {
+        ResultTest test = new ResultTest();
+        test.setCode("LOGIN_001");
+        test.setMessage("登录失败");
+        return test;
+    }
+
+
+
 }
