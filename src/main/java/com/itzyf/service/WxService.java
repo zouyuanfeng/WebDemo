@@ -2,6 +2,7 @@ package com.itzyf.service;
 
 import com.alibaba.druid.util.StringUtils;
 import com.google.gson.Gson;
+import com.itzyf.bean.JsapiTicket;
 import com.itzyf.bean.WxAccessToken;
 import com.itzyf.bean.WxUserInfo;
 import com.itzyf.bean.WxWebAccessToken;
@@ -32,6 +33,7 @@ public class WxService {
     private static final String ACCESS_TOKEN_KEY = "access_token";
     private static final String REFRESH_TOKEN_KEY = "refresh_token";
 
+    private static final String JSAPI_TICKET_KEY = "JsapiTicket";
 
     private final RedisClientTemplate redisClientTemplate;
 
@@ -54,6 +56,20 @@ public class WxService {
             return new Gson().fromJson(result, WxAccessToken.class);
         } else
             return new Gson().fromJson(access_token, WxAccessToken.class);
+    }
+
+
+    public String getJsapiTicket() {
+        String jsapiTicket = redisClientTemplate.get(JSAPI_TICKET_KEY);
+        if (StringUtils.isEmpty(jsapiTicket)) {
+            String url = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=" + getAccessToken().getAccess_token() + "&type=jsapi";
+            String result = request(url);
+            redisClientTemplate.set(JSAPI_TICKET_KEY, result);
+            redisClientTemplate.expire(JSAPI_TICKET_KEY, 7000);
+            return new Gson().fromJson(result, JsapiTicket.class).getTicket();
+        } else {
+            return new Gson().fromJson(jsapiTicket, JsapiTicket.class).getTicket();
+        }
     }
 
     public WxWebAccessToken getWebAccessToken(String code) {
@@ -124,7 +140,7 @@ public class WxService {
     }
 
 
-    private String getRandomString() { //length表示生成字符串的长度
+    public String getRandomString() { //length表示生成字符串的长度
         String base = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         Random random = new Random();
         StringBuilder sb = new StringBuilder();
