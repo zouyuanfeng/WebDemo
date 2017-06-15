@@ -42,3 +42,4 @@ hs_err_pid*
 .gradle/
 .idea/
 build/
+global-config.properties
