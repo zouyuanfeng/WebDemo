@@ -23,21 +23,21 @@
     <a href="javascript:void (0)" class="weui-btn weui-btn_primary" onclick="showDialog()">弹窗</a>
     <a href="javascript:void (0)" class="weui-btn weui-btn_primary" onclick="chooseImage()">选择相片</a>
 
-    <a href="javascript:;" onclick="showLoading()" class="weui-btn weui-btn_primary">页面主操作 Normal</a>
-    <a href="javascript:;" class="weui-btn weui-btn_disabled weui-btn_primary">页面主操作 Disabled</a>
-    <a href="javascript:;" class="weui-btn weui-btn_default">页面次要操作 Normal</a>
-    <a href="javascript:;" class="weui-btn weui-btn_disabled weui-btn_default">页面次要操作 Disabled</a>
-    <a href="javascript:;" class="weui-btn weui-btn_warn">警告类操作 Normal</a>
-    <a href="javascript:;" class="weui-btn weui-btn_disabled weui-btn_warn">警告类操作 Disabled</a>
+    <a href="javascript:void (0)" onclick="showLoading()" class="weui-btn weui-btn_primary">加载中</a>
+    <a href="javascript:void (0)" class="weui-btn weui-btn_disabled weui-btn_primary">页面主操作 Disabled</a>
+    <a href="javascript:void (0)"  class="weui-btn weui-btn_default">页面次要操作 Normal</a>
+    <a href="javascript:void (0)" class="weui-btn weui-btn_disabled weui-btn_default">页面次要操作 Disabled</a>
+    <a href="javascript:void (0)" class="weui-btn weui-btn_warn">警告类操作 Normal</a>
+    <a href="javascript:void (0)" class="weui-btn weui-btn_disabled weui-btn_warn">警告类操作 Disabled</a>
 
     <div class="button-sp-area">
-        <a href="javascript:;" class="weui-btn weui-btn_plain-default">按钮</a>
-        <a href="javascript:;" class="weui-btn weui-btn_plain-default weui-btn_plain-disabled">按钮</a>
-        <a href="javascript:;" class="weui-btn weui-btn_plain-primary">按钮</a>
-        <a href="javascript:;" class="weui-btn weui-btn_plain-primary weui-btn_plain-disabled">按钮</a>
-        <a href="javascript:;" class="weui-btn weui-btn_mini weui-btn_primary">按钮</a>
-        <a href="javascript:;" class="weui-btn weui-btn_mini weui-btn_default">按钮</a>
-        <a href="javascript:;" class="weui-btn weui-btn_mini weui-btn_warn">按钮</a>
+        <a href="javascript:void (0)" class="weui-btn weui-btn_plain-default">按钮</a>
+        <a href="javascript:void (0)" class="weui-btn weui-btn_plain-default weui-btn_plain-disabled">按钮</a>
+        <a href="javascript:void (0)" class="weui-btn weui-btn_plain-primary">按钮</a>
+        <a href="javascript:void (0)" class="weui-btn weui-btn_plain-primary weui-btn_plain-disabled">按钮</a>
+        <a href="javascript:void (0)" class="weui-btn weui-btn_mini weui-btn_primary">按钮</a>
+        <a href="javascript:void (0)" class="weui-btn weui-btn_mini weui-btn_default">按钮</a>
+        <a href="javascript:void (0)" class="weui-btn weui-btn_mini weui-btn_warn">按钮</a>
     </div>
 
     <img src="" id="image" width="100px">
@@ -48,7 +48,7 @@
         <div class="weui-dialog__hd"><strong class="weui-dialog__title">弹窗标题</strong></div>
         <div class="weui-dialog__bd">弹窗内容，告知当前页面信息等</div>
         <div class="weui-dialog__ft">
-            <a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_primary" onclick="hideDialog()">确定</a>
+            <a href="javascript:void (0)" class="weui-dialog__btn weui-dialog__btn_primary" onclick="hideDialog()">确定</a>
         </div>
     </div>
 </div>
@@ -73,6 +73,7 @@
 </div>
 </body>
 <script>
+    alert(location.href);
     function showDialog() {
         $("#dialog").show()
     }
@@ -85,7 +86,7 @@
         timestamp: '${timestamp}', // 必填，生成签名的时间戳
         nonceStr: '${nonceStr}', // 必填，生成签名的随机串
         signature: '${signature}',// 必填，签名，见附录1
-        jsApiList: ['chooseImage'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+        jsApiList: ['chooseImage','onMenuShareTimeline'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
     });
     function showLoading() {
         $("#loadingToast").show();
@@ -97,7 +98,19 @@
     wx.ready(function () {
         // config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中。
         console.log("微信js加载成功");
-
+        wx.onMenuShareTimeline({
+            title: '测试分享', // 分享标题
+            link: location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: 'http://itzyf.tunnel.whsz100.com/${res}/image/share.jpg', // 分享图标
+            success: function () {
+                // 用户确认分享后执行的回调函数
+                console.log("分享成功")
+            },
+            cancel: function () {
+                // 用户取消分享后执行的回调函数
+                console.log("取消分享")
+            }
+        });
     });
     //
     //    wx.error(function (res) {
@@ -117,5 +130,6 @@
             }
         });
     }
+
 </script>
 </html>

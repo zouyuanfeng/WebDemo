@@ -65,7 +65,9 @@ public class WxController {
                 String content = map.get("Content");
                 if ("1".equals(content)) {
                     txtmsg.setContent("你好，你发送的内容是 1！");
-                }else {
+                }if ("主页".equals(content)){
+                    txtmsg.setContent("http://itzyf.tunnel.whsz100.com/wx");
+                } else{
                     txtmsg.setContent("你好，欢迎欢迎热烈欢迎！！！");
                 }
                 return MessageUtil.textMessageToXml(txtmsg);

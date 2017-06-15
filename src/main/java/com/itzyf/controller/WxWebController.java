@@ -36,15 +36,28 @@ public class WxWebController {
 
     @RequestMapping("")
     public ModelAndView wxIndex(HttpServletRequest request) {
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(request.getScheme()).append("://").append(request.getServerName());
+        if (80 != request.getServerPort()) {
+            sb.append(":").append(request.getServerPort());
+        }
+        sb.append(request.getServletPath());
+        if (request.getQueryString() != null) {
+            sb.append("?").append(request.getQueryString());
+        }
+
+        System.out.println(sb.toString());
+
         Map<String, Object> map = new HashMap<>();
         String nonceStr = wxService.getRandomString().toLowerCase();
         String timestamp = new Date().getTime() + "";
-        String url = request.getScheme() + "://" + request.getServerName() + "/wx"; //当前页面的链接
+//        String url = request.getScheme() + "://" + request.getServerName() + "/wx"; //当前页面的链接
         String jsapi_ticket = wxService.getJsapiTicket();
         map.put("appId", GlobalConfig.getConfig().getConfigValue("wx_app_id"));
         map.put("nonceStr", nonceStr);
         map.put("timestamp", timestamp);
-        map.put("signature", SignUtil.getSignature(timestamp, nonceStr, url, jsapi_ticket));
+        map.put("signature", SignUtil.getSignature(timestamp, nonceStr, sb.toString(), jsapi_ticket));
         return new ModelAndView("wx", map);
     }
 

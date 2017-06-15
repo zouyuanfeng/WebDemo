@@ -17,7 +17,7 @@ public class SignUtil {
     private static Logger logger = Logger.getLogger(SignUtil.class);
 
     // 与接口配置信息中的 Token 要一致   
-    private static String token = "sjdkhfgjksdhjk";
+    private static String token =  GlobalConfig.getConfig().getConfigValue("wx_token");
 
     /**
      * 验证签名
