@@ -2,14 +2,9 @@ package com.itzyf.service;
 
 import com.alibaba.druid.util.StringUtils;
 import com.google.gson.Gson;
-import com.itzyf.bean.JsapiTicket;
-import com.itzyf.bean.WxAccessToken;
-import com.itzyf.bean.WxUserInfo;
-import com.itzyf.bean.WxWebAccessToken;
+import com.itzyf.bean.*;
 import com.itzyf.util.GlobalConfig;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import okhttp3.*;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -81,6 +76,29 @@ public class WxService {
         redisClientTemplate.set(wxWebAccessToken.getOpenid() + REFRESH_TOKEN_KEY, wxWebAccessToken.getRefresh_token());
         redisClientTemplate.expire(wxWebAccessToken.getOpenid() + REFRESH_TOKEN_KEY, 10 * 24 * 60 * 60); //缓存十天
         return wxWebAccessToken;
+    }
+
+    /**
+     * 推送菜单
+     *
+     * @param menu
+     */
+    public WxError setMenu(WxMenu menu) {
+        String url = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=" + getAccessToken().getAccess_token();
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), new Gson().toJson(menu));
+        Request request = new Request.Builder().url(url).post(body).build();
+        try {
+            Response response = client.newCall(request).execute();
+            //判断请求是否成功
+            if (response.isSuccessful()) {
+                //打印服务端返回结果
+//                logger.info(response.body().string());
+                return new Gson().fromJson(response.body().string(), WxError.class);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**

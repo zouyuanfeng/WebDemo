@@ -11,17 +11,19 @@
 <head>
     <title>微信</title>
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
-    <link rel="stylesheet" href="//res.wx.qq.com/open/libs/weui/1.1.2/weui.min.css"/>
-    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+    <link rel="stylesheet" href="${res}/css/weui.min.css"/>
+    <script src="${res}/js/jquery-2.1.4.min.js"></script>
     <script src="${res}/js/vconsole.min.js"></script>
-    <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script src="${res}/js/jweixin-1.2.0.js"></script>
 </head>
 <body>
 <div style="margin: 10px">
+
+    <input type="date">
     <a href="javascript:void (0)" class="weui-btn weui-btn_primary" onclick="showDialog()">弹窗</a>
     <a href="javascript:void (0)" class="weui-btn weui-btn_primary" onclick="chooseImage()">选择相片</a>
 
-    <a href="javascript:;" class="weui-btn weui-btn_primary">页面主操作 Normal</a>
+    <a href="javascript:;" onclick="showLoading()" class="weui-btn weui-btn_primary">页面主操作 Normal</a>
     <a href="javascript:;" class="weui-btn weui-btn_disabled weui-btn_primary">页面主操作 Disabled</a>
     <a href="javascript:;" class="weui-btn weui-btn_default">页面次要操作 Normal</a>
     <a href="javascript:;" class="weui-btn weui-btn_disabled weui-btn_default">页面次要操作 Disabled</a>
@@ -50,6 +52,25 @@
         </div>
     </div>
 </div>
+
+<div id="loadingToast" style="display:none;">
+    <div class="weui-mask_transparent"></div>
+    <div class="weui-toast">
+        <i class="weui-loading weui-icon_toast"></i>
+        <p class="weui-toast__content">数据加载中</p>
+    </div>
+</div>
+
+<div class="weui-loadmore">
+    <i class="weui-loading"></i>
+    <span class="weui-loadmore__tips">正在加载</span>
+</div>
+<div class="weui-loadmore weui-loadmore_line">
+    <span class="weui-loadmore__tips">暂无数据</span>
+</div>
+<div class="weui-loadmore weui-loadmore_line weui-loadmore_dot">
+    <span class="weui-loadmore__tips"></span>
+</div>
 </body>
 <script>
     function showDialog() {
@@ -66,11 +87,18 @@
         signature: '${signature}',// 必填，签名，见附录1
         jsApiList: ['chooseImage'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
     });
+    function showLoading() {
+        $("#loadingToast").show();
+        setTimeout(function () {
+            $("#loadingToast").hide();
+        }, 3000);
+    }
 
-    //    wx.ready(function () {
-    //        // config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中。
-    //        console.log("微信js加载成功")
-    //    });
+    wx.ready(function () {
+        // config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中。
+        console.log("微信js加载成功");
+
+    });
     //
     //    wx.error(function (res) {
     //        // config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。

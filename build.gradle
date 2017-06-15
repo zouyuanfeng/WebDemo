@@ -65,8 +65,11 @@ dependencies {
 
 //    compile 'com.qiniu:qiniu-java-sdk:7.2.6'
     compile 'com.squareup.okhttp3:okhttp:3.8.0'
+//    compile 'com.zhy:okhttputils:2.6.2'
     compile 'com.google.code.gson:gson:2.8.0'
 //    compile 'com.qiniu:happy-dns-java:0.1.4'
     compile 'redis.clients:jedis:2.9.0'
     compile 'org.springframework.data:spring-data-redis:1.8.4.RELEASE'
+    compile 'org.apache.directory.studio:org.dom4j.dom4j:1.6.1'
+    compile 'com.thoughtworks.xstream:xstream:1.4.9'
 }

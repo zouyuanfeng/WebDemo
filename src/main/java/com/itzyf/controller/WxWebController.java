@@ -34,12 +34,12 @@ public class WxWebController {
         return "redirect:" + wxService.authorize("http://itzyf.tunnel.whsz100.com/"); //授权完成之后回调该网址，并添加参数code和state
     }
 
-    @RequestMapping("index")
+    @RequestMapping("")
     public ModelAndView wxIndex(HttpServletRequest request) {
         Map<String, Object> map = new HashMap<>();
         String nonceStr = wxService.getRandomString().toLowerCase();
         String timestamp = new Date().getTime() + "";
-        String url = request.getScheme() + "://" + request.getServerName() + "/wx/index"; //当前页面的链接
+        String url = request.getScheme() + "://" + request.getServerName() + "/wx"; //当前页面的链接
         String jsapi_ticket = wxService.getJsapiTicket();
         map.put("appId", GlobalConfig.getConfig().getConfigValue("wx_app_id"));
         map.put("nonceStr", nonceStr);
@@ -47,6 +47,5 @@ public class WxWebController {
         map.put("signature", SignUtil.getSignature(timestamp, nonceStr, url, jsapi_ticket));
         return new ModelAndView("wx", map);
     }
-
 
 }
