@@ -65,11 +65,17 @@ public class WxController {
                 String content = map.get("Content");
                 if ("1".equals(content)) {
                     txtmsg.setContent("你好，你发送的内容是 1！");
-                }if ("主页".equals(content)){
+                }
+                if ("主页".equals(content)) {
                     txtmsg.setContent("http://itzyf.tunnel.whsz100.com/wx");
-                } else{
+                } else {
                     txtmsg.setContent("你好，欢迎欢迎热烈欢迎！！！");
                 }
+                return MessageUtil.textMessageToXml(txtmsg);
+            } else if (map.get("MsgType").equals(MessageUtil.REQ_MESSAGE_TYPE_IMAGE)) {
+                txtmsg.setContent("图片已收到");
+                String picUrl = map.get("PicUrl");
+                logger.info("pic:" + picUrl);
                 return MessageUtil.textMessageToXml(txtmsg);
             }
 //            System.out.println("============================="+map.get("Content"));
