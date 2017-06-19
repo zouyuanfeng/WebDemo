@@ -1,5 +1,7 @@
 package com.itzyf.controller;
 
+import com.google.gson.Gson;
+import com.itzyf.bean.MaoYanMovies;
 import com.itzyf.service.WxService;
 import com.itzyf.util.GlobalConfig;
 import com.itzyf.util.SignUtil;
@@ -7,6 +9,8 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -60,5 +64,21 @@ public class WxWebController {
         map.put("signature", SignUtil.getSignature(timestamp, nonceStr, sb.toString(), jsapi_ticket));
         return new ModelAndView("wx", map);
     }
+
+    @RequestMapping("movies")
+    public String pageMovies() {
+        return "movie";
+    }
+
+
+    @ResponseBody
+    @RequestMapping("getMovies")
+    public MaoYanMovies getMovies(@RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
+                          @RequestParam(value = "pageNo", defaultValue = "0") int pageNo) {
+        String result = wxService.request("http://m.maoyan.com/movie/list.json?type=hot&offset=" + pageNo * pageSize + "&limit=" + pageSize);
+        logger.info(result);
+        return new Gson().fromJson(result, MaoYanMovies.class);
+    }
+
 
 }

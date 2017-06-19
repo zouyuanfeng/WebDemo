@@ -169,7 +169,7 @@ public class WxService {
         return sb.toString();
     }
 
-    private String request(String url) {
+    public String request(String url) {
         try {
             Request request = new Request.Builder().url(url).build();
             Response response = client.newCall(request).execute();

@@ -73,7 +73,7 @@
 </div>
 </body>
 <script>
-    alert(location.href);
+//    alert(location.href);
     function showDialog() {
         $("#dialog").show()
     }
