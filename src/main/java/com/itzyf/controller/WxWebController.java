@@ -25,7 +25,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("wx")
 public class WxWebController {
-    Logger logger = Logger.getLogger(WxWebController.class);
+    private static Logger logger = Logger.getLogger(WxWebController.class);
     private WxService wxService;
 
     @Autowired
@@ -58,6 +58,7 @@ public class WxWebController {
         String timestamp = new Date().getTime() + "";
 //        String url = request.getScheme() + "://" + request.getServerName() + "/wx"; //当前页面的链接
         String jsapi_ticket = wxService.getJsapiTicket();
+        logger.info("ticket:" + jsapi_ticket);
         map.put("appId", GlobalConfig.getConfig().getConfigValue("wx_app_id"));
         map.put("nonceStr", nonceStr);
         map.put("timestamp", timestamp);
@@ -74,7 +75,7 @@ public class WxWebController {
     @ResponseBody
     @RequestMapping("getMovies")
     public MaoYanMovies getMovies(@RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
-                          @RequestParam(value = "pageNo", defaultValue = "0") int pageNo) {
+                                  @RequestParam(value = "pageNo", defaultValue = "0") int pageNo) {
         String result = wxService.request("http://m.maoyan.com/movie/list.json?type=hot&offset=" + pageNo * pageSize + "&limit=" + pageSize);
         logger.info(result);
         return new Gson().fromJson(result, MaoYanMovies.class);

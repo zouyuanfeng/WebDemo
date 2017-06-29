@@ -138,4 +138,9 @@ public class WxController {
 
     }
 
+    @RequestMapping("uuid")
+    public String getUUID(){
+        return wxService.getUUID();
+    }
+
 }

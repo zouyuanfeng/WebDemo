@@ -37,8 +37,13 @@ ${END}
         <label for="exampleInputFile">文件上传</label>
         <input type="file" id="exampleInputFile" accept="image/png,image/gif" name="file">
     </div>
-    <button type="submit" class="btn btn-default">提交</button>
+    <button class="btn btn-default">提交</button>
 </form>
+
+<div id="user">
+
+</div>
+
 </body>
 <script type="text/javascript">
     function getQueryString(name) {
@@ -47,13 +52,40 @@ ${END}
         if (r != null) return unescape(r[2]);
         return null;
     }
-    var code = getQueryString("code");
-    if (code != undefined)
-        $.get("/wx/web-access-token?code=" + code, function (data, status) {
-            alert("Data: " + JSON.stringify(data)  + "\nStatus: " + status);
-            $.get("wx/userInfo",function (data, status) {
-                alert("Data: " + JSON.stringify(data)  + "\nStatus: " + status);
-            })
-        });
+
+    /**
+     *
+     * @returns {boolean}
+     * @constructor
+     */
+    function IsPC() {
+        var userAgentInfo = navigator.userAgent;
+        var Agents = ["Android", "iPhone",
+            "SymbianOS", "Windows Phone",
+            "iPad", "iPod"];
+        var flag = true;
+        for (var v = 0; v < Agents.length; v++) {
+            if (userAgentInfo.indexOf(Agents[v]) > 0) {
+                flag = false;
+                break;
+            }
+        }
+        return flag;
+    }
+
+    if (!IsPC()) {
+        var code = getQueryString("code");
+        if (code != null) {
+            $.get("/wx/web-access-token?code=" + code, function (data, status) {
+                alert("Data: " + JSON.stringify(data) + "\nStatus: " + status);
+                $.get("wx/userInfo", function (data, status) {
+//                alert("Data: " + JSON.stringify(data) + "\nStatus: " + status);
+                    $("#user").html(JSON.stringify(data))
+                })
+            });
+        } else {
+            location.href = "/wx/authorize";
+        }
+    }
 </script>
 </html>

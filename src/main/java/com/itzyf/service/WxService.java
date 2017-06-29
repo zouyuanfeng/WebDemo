@@ -4,6 +4,7 @@ import com.alibaba.druid.util.StringUtils;
 import com.google.gson.Gson;
 import com.itzyf.bean.*;
 import com.itzyf.util.GlobalConfig;
+import com.itzyf.util.RedisTemplateUtil;
 import okhttp3.*;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Random;
+import java.util.UUID;
 
 /**
  * @author 依风听雨
@@ -30,11 +32,22 @@ public class WxService {
 
     private static final String JSAPI_TICKET_KEY = "JsapiTicket";
 
-    private final RedisClientTemplate redisClientTemplate;
+
+    private final RedisTemplateUtil redisTemplateUtil;
 
     @Autowired
-    public WxService(RedisClientTemplate redisClientTemplate) {
-        this.redisClientTemplate = redisClientTemplate;
+    public WxService(RedisTemplateUtil redisTemplateUtil) {
+        this.redisTemplateUtil = redisTemplateUtil;
+    }
+
+
+    public String getUUID() {
+        String uuid = redisTemplateUtil.get("uuid");
+        if (StringUtils.isEmpty(uuid)) {
+            uuid = UUID.randomUUID().toString();
+            redisTemplateUtil.set("uuid", uuid, 6000);
+        }
+        return uuid;
     }
 
     /**
@@ -43,38 +56,36 @@ public class WxService {
      * @return
      */
     public WxAccessToken getAccessToken() {
-        String access_token = redisClientTemplate.get(ACCESS_TOKEN_KEY);
-        if (StringUtils.isEmpty(access_token)) {
-            String result = request(WX_API + "cgi-bin/token?grant_type=client_credential&appid=" + appID + "&secret=" + appSecret);
-            redisClientTemplate.set(ACCESS_TOKEN_KEY, result);
-            redisClientTemplate.expire(ACCESS_TOKEN_KEY, 7000);
-            return new Gson().fromJson(result, WxAccessToken.class);
-        } else
-            return new Gson().fromJson(access_token, WxAccessToken.class);
+        String result = request(WX_API + "cgi-bin/token?grant_type=client_credential&appid=" + appID + "&secret=" + appSecret);
+        return new Gson().fromJson(result, WxAccessToken.class);
     }
 
+    public String getAccessTokenStr() {
+        String token = redisTemplateUtil.get(ACCESS_TOKEN_KEY);
+        if (StringUtils.isEmpty(token)) {
+            token = getAccessToken().getAccess_token();
+            redisTemplateUtil.set(ACCESS_TOKEN_KEY, token, 7000);
+        }
+        return token;
+    }
 
     public String getJsapiTicket() {
-        String jsapiTicket = redisClientTemplate.get(JSAPI_TICKET_KEY);
-        if (StringUtils.isEmpty(jsapiTicket)) {
-            String url = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=" + getAccessToken().getAccess_token() + "&type=jsapi";
+        String ticket = redisTemplateUtil.get(JSAPI_TICKET_KEY);
+        if (StringUtils.isEmpty(ticket)) {
+            String url = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=" + getAccessTokenStr() + "&type=jsapi";
             String result = request(url);
-            redisClientTemplate.set(JSAPI_TICKET_KEY, result);
-            redisClientTemplate.expire(JSAPI_TICKET_KEY, 7000);
-            return new Gson().fromJson(result, JsapiTicket.class).getTicket();
-        } else {
-            return new Gson().fromJson(jsapiTicket, JsapiTicket.class).getTicket();
+            ticket = new Gson().fromJson(result, JsapiTicket.class).getTicket();
         }
+        return ticket;
     }
+
 
     public WxWebAccessToken getWebAccessToken(String code) {
         String url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + appID + "&secret=" + appSecret + "&code=" + code + "&grant_type=authorization_code";
         String result = request(url);
         WxWebAccessToken wxWebAccessToken = new Gson().fromJson(result, WxWebAccessToken.class);
-        redisClientTemplate.set(wxWebAccessToken.getOpenid() + ACCESS_TOKEN_KEY, result);
-        redisClientTemplate.expire(ACCESS_TOKEN_KEY, 7000);
-        redisClientTemplate.set(wxWebAccessToken.getOpenid() + REFRESH_TOKEN_KEY, wxWebAccessToken.getRefresh_token());
-        redisClientTemplate.expire(wxWebAccessToken.getOpenid() + REFRESH_TOKEN_KEY, 10 * 24 * 60 * 60); //缓存十天
+        redisTemplateUtil.set(wxWebAccessToken.getOpenid() + ACCESS_TOKEN_KEY, result, 7000);
+        redisTemplateUtil.set(wxWebAccessToken.getOpenid() + REFRESH_TOKEN_KEY, wxWebAccessToken.getRefresh_token(), 10 * 24 * 60 * 60);
         return wxWebAccessToken;
     }
 
@@ -84,7 +95,7 @@ public class WxService {
      * @param menu
      */
     public WxError setMenu(WxMenu menu) {
-        String url = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=" + getAccessToken().getAccess_token();
+        String url = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=" + getAccessTokenStr();
         RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), new Gson().toJson(menu));
         Request request = new Request.Builder().url(url).post(body).build();
         try {
@@ -108,7 +119,7 @@ public class WxService {
      * @return
      */
     public WxWebAccessToken getCacheWebAccessToken(String openId) {
-        String s = redisClientTemplate.get(openId + ACCESS_TOKEN_KEY);
+        String s = redisTemplateUtil.get(openId + ACCESS_TOKEN_KEY);
         if (StringUtils.isEmpty(s)) {
             return refreshToken(openId); //刷新access_token
         }
@@ -116,14 +127,12 @@ public class WxService {
     }
 
     private WxWebAccessToken refreshToken(String openId) {
-        String refresh_token = redisClientTemplate.get(openId + REFRESH_TOKEN_KEY);
+        String refresh_token = redisTemplateUtil.get(openId + REFRESH_TOKEN_KEY);
         String url = "https://api.weixin.qq.com/sns/oauth2/refresh_token?appid=APPID&grant_type=refresh_token&refresh_token=" + refresh_token;
         String result = request(url);
         WxWebAccessToken wxWebAccessToken = new Gson().fromJson(result, WxWebAccessToken.class);
-        redisClientTemplate.set(wxWebAccessToken.getOpenid() + ACCESS_TOKEN_KEY, result);
-        redisClientTemplate.expire(ACCESS_TOKEN_KEY, 7000);
-        redisClientTemplate.set(wxWebAccessToken.getOpenid() + REFRESH_TOKEN_KEY, wxWebAccessToken.getRefresh_token());
-        redisClientTemplate.expire(wxWebAccessToken.getOpenid() + REFRESH_TOKEN_KEY, 10 * 24 * 60 * 60); //缓存十天
+        redisTemplateUtil.set(wxWebAccessToken.getOpenid() + ACCESS_TOKEN_KEY, result, 7000);
+        redisTemplateUtil.set(wxWebAccessToken.getOpenid() + REFRESH_TOKEN_KEY, wxWebAccessToken.getRefresh_token(), 10 * 24 * 60 * 60);
         return wxWebAccessToken;
     }
 

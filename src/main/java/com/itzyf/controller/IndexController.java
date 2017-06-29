@@ -36,6 +36,9 @@ public class IndexController {
 
     @RequestMapping(value = "/fileUpload", method = RequestMethod.POST)
     public ModelAndView uploadFile(@RequestParam("file") MultipartFile file) {
+        if (file.isEmpty()) {
+            return new ModelAndView("index");
+        }
         logger.info("上传文件:" + file.getOriginalFilename());
         String home = System.getProperty("catalina.home") + "/temp-img/";//临时上传的目录
 
@@ -106,7 +109,6 @@ public class IndexController {
         test.setMessage("登录失败");
         return test;
     }
-
 
 
 }

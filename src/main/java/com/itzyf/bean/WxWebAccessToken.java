@@ -1,10 +1,12 @@
 package com.itzyf.bean;
 
+import java.io.Serializable;
+
 /**
  * @author 依风听雨
  * @version 创建时间：2017/6/12 15:25
  */
-public class WxWebAccessToken extends WxError{
+public class WxWebAccessToken extends WxError implements Serializable{
 
 
     /**
